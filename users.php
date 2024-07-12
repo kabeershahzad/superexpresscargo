@@ -1,5 +1,8 @@
 <?php
+include('admin_function.php');
+check_admin();
 include('config.php');
+
 
 if(isset($_POST['submit'])){
     $name = $_POST['name'];
