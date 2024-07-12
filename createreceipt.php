@@ -12,10 +12,12 @@ if (!isset($_SESSION['userid'])) {
 $userid = $_SESSION['userid'];
 
 // Retrieve user's city from database
-$query = "SELECT city FROM users WHERE userid = '$userid'";
+$query = "SELECT city, office FROM users WHERE userid = '$userid'";
 $result = mysqli_query($con, $query);
 $row = mysqli_fetch_assoc($result);
 $userCity = $row['city'];
+$userOffice = $row['office'];
+
 
 if (isset($_POST['submit'])) {
     $date = $_POST['date'];
@@ -33,11 +35,12 @@ if (isset($_POST['submit'])) {
     $local_charges = $_POST['local-charges'];
     $packing = $_POST['packing'];
     $total_amount = $_POST['total-amount'];
+    $office=$_POST['office'];
 
     // Prepare and execute the SQL statement
     try {
-        $stmt = "INSERT INTO shipments (date, origin, destination, receipt_no, shipper_name, shipper_contact, consignee_name, consignee_contact, weight, pieces, mode_of_payment, rate, local_charges, packing, total_amount) 
-                 VALUES ('$date', '$origin', '$destination', '$receipt', '$shipper_name', '$shipper_contact', '$consignee_name', '$consignee_contact', '$weight', '$pieces', '$mode_of_payment', '$rate', '$local_charges', '$packing', '$total_amount')";
+        $stmt = "INSERT INTO shipments (date, origin, destination, receipt_no, shipper_name, shipper_contact, consignee_name, consignee_contact, weight, pieces, mode_of_payment, rate, local_charges, packing, total_amount, office) 
+                 VALUES ('$date', '$origin', '$destination', '$receipt', '$shipper_name', '$shipper_contact', '$consignee_name', '$consignee_contact', '$weight', '$pieces', '$mode_of_payment', '$rate', '$local_charges', '$packing', '$total_amount','$office')";
 
         $result = mysqli_query($con, $stmt);
 
@@ -109,6 +112,11 @@ if (isset($_POST['submit'])) {
                     <div class="form-group">
                         <label for="origin">Origin:</label>
                         <input type="text" class="form-control" id="origin" name="origin" value="<?php echo $userCity; ?>"
+                            readonly required />
+                    </div>
+                    <div class="form-group">
+                        <label for="office">Office:</label>
+                        <input type="text" class="form-control" id="office" name="office" value="<?php echo $userOffice; ?>"
                             readonly required />
                     </div>
                     <div class="form-group">

@@ -116,12 +116,14 @@ $userid = $_SESSION['userid'];
             <th>Local</th>
             <th>Packing</th>
             <th>Total Amount</th>
+            <th>Office</th>
+
           </tr>
         </thead>
         <tbody id="table-body">
           <?php
           $query = "SELECT s.shipment_id, s.date, s.origin, s.destination, s.receipt_no, s.shipper_name, s.shipper_contact, s.consignee_name, s.consignee_contact, 
-       s.weight, s.pieces, s.mode_of_payment, s.rate, s.local_charges, s.packing, s.total_amount
+       s.weight, s.pieces, s.mode_of_payment, s.rate, s.local_charges, s.packing, s.total_amount, s.office
 FROM shipments s
 JOIN users u ON s.origin = u.city
 WHERE u.userid = ?
@@ -149,6 +151,8 @@ ORDER BY s.shipment_id DESC";
             echo "<td>" . $row['local_charges'] . "</td>";
             echo "<td>" . $row['packing'] . "</td>";
             echo "<td>" . $row['total_amount'] . "</td>";
+            echo "<td>" . $row['office'] . "</td>";
+
             echo "</tr>";
           }
           ?>

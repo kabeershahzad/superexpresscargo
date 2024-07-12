@@ -92,6 +92,7 @@ $results = mysqli_query($con, $query);
                     <th>Email</th>
                     <th>Password</th>
                     <th>City</th>
+                    <th>Office</th>
                     <th>Role</th>
                     <th>Action</th>
                 </tr>
@@ -104,7 +105,7 @@ $results = mysqli_query($con, $query);
                         <td><?php echo $row['email']; ?></td>
                         <td><?php echo $row['password']; ?></td>
                         <td><?php echo $row['city']; ?></td>
-
+                        <td><?php echo $row['office']; ?></td>
                         <td><?php echo $row['role'] == 1 ? 'Admin' : 'User'; ?></td>
                         <td>
                             <form method="post" action="users.php" style="display:inline;">

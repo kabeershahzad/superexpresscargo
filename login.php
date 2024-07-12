@@ -22,6 +22,7 @@ if(isset($_POST['login'])){
         $_SESSION['name'] = $row['name'];
         $_SESSION['city'] = $row['city'];
         $_SESSION['role'] = $row['role']; // Store user role in the session
+        $_SESSION['office'] = $row['office']; // Store user role in the session
 
         if($row['role'] == 1){
             header('location:admin.php');

@@ -11,6 +11,8 @@ if(!isset($_SESSION['userid'])){
 $userid = $_SESSION['userid'];
 $name = $_SESSION['name'];
 $city = $_SESSION['city'];
+$office = $_SESSION['office'];
+
 ?>
 
 <!DOCTYPE html>
@@ -103,6 +105,10 @@ $city = $_SESSION['city'];
       <h2 class="center">
         Your City:
         <?php echo htmlspecialchars($city); ?>
+      </h2>
+      <h2 class="center">
+        Your Office:
+        <?php echo htmlspecialchars($office); ?>
       </h2>
       <div class="button-container">
         <a href="./createreceipt.php"
