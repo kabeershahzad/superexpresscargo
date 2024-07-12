@@ -1,22 +1,8 @@
 <?php
-session_start();
-
 include('config.php');
 
-// Check if user is logged in
-if (!isset($_SESSION['userid'])) {
-    header('location:login.php');
-    exit();
-}
-
-$userid = $_SESSION['userid'];
-
-// Retrieve user's city from database
-$query = "SELECT city FROM users WHERE userid = '$userid'";
-$result = mysqli_query($con, $query);
-$row = mysqli_fetch_assoc($result);
-$userCity = $row['city'];
-
+// Retrieve form data
+//! Dispatch code here
 if (isset($_POST['submit'])) {
     $date = $_POST['date'];
     $origin = $_POST['origin'];
@@ -55,7 +41,6 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -64,37 +49,44 @@ if (isset($_POST['submit'])) {
     <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-auth-compat.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">Super Express Cargo Service</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="./createreceipt.php">Dispatch</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./createreceipt.php">Delivery</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./report.php">Report</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.php">Logout</a>
-                    </li>
-                    <!-- Add more menu items for the admin panel -->
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.php"
+          >Super Express Cargo Service</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="./createreceipt.php">Dispatch</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./createreceipt.php">Delivery</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./report.php">Report</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="logout.php">Logout</a>
+            </li>
+            <!-- Add more menu items for the admin panel -->
+          </ul>
         </div>
+      </div>
     </nav>
 
     <div class="container">
@@ -108,27 +100,20 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="form-group">
                         <label for="origin">Origin:</label>
-                        <input type="text" class="form-control" id="origin" name="origin" value="<?php echo $userCity; ?>"
-                            readonly required />
+                        <select class="form-control" id="origin" name="origin" required>
+                            <option value="">Select origin</option>
+                            <option value="Karachi">Karachi</option>
+                            <option value="Lahore">Lahore</option>
+                            <option value="Faisalabad">Faisalabad</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="destination">Destination:</label>
                         <select class="form-control" id="destination" name="destination" required>
                             <option value="">Select destination</option>
-                            <?php
-                            // Array of destination cities (modify as per your actual cities)
-                            $destinationCities = array("Faisalabad", "Karachi", "Lahore");
-
-                            // Remove $userCity from $destinationCities array
-                            if (($key = array_search($userCity, $destinationCities)) !== false) {
-                                unset($destinationCities[$key]);
-                            }
-
-                            // Generate options for each destination city
-                            foreach ($destinationCities as $city) {
-                                echo "<option value='$city'>$city</option>";
-                            }
-                            ?>
+                            <option value="Faisalabad">Faisalabad</option>
+                            <option value="Karachi">Karachi</option>
+                            <option value="Lahore">Lahore</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -208,7 +193,7 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
         </form>
-        <?php include('dispatch_list_bottom.php'); ?>
+        <?php include('report.php');?>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -281,5 +266,4 @@ if (isset($_POST['submit'])) {
         });
     </script>
 </body>
-
 </html>

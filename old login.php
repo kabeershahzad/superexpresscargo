@@ -1,9 +1,10 @@
 <?php
 include('config.php');
 //session_start(); 
-// if (session_status() == PHP_SESSION_NONE) {
-//   session_start();
-// }
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
+
 
 if(isset($_POST['login'])){
     $username = $_POST['email'];
@@ -21,11 +22,11 @@ if(isset($_POST['login'])){
         $_SESSION['userid'] = $row['userid'];
         $_SESSION['name'] = $row['name'];
         $_SESSION['city'] = $row['city'];
-        $_SESSION['role'] = $row['role']; // Store user role in the session
+        $role = $row['role']; // getting user role
 
-        if($row['role'] == 1){
-            header('location:admin.php');
-        } else if($row['role'] == 2){
+        if($role == 1){
+            header('location:admin.html');
+        } else if($role == 2){
             header('location:index.php');
         }
     } else {

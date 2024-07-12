@@ -1,3 +1,7 @@
+<?php
+  include('admin_function.php');
+  check_admin();
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>

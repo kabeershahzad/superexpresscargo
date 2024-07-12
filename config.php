@@ -1,8 +1,12 @@
 <?php
-$con=new mysqli('localhost','root','')or die("Unable to connect");
+if(session_status() === PHP_SESSION_NONE){
+    // If no session exists, start one
+    session_start();
+}
 
-if (!mysqli_select_db($con,'superexp_db')) {
-	// code...
-	echo "Database not selected";
+$con = new mysqli('localhost', 'root', '') or die("Unable to connect");
+
+if (!mysqli_select_db($con, 'superexp_db')) {
+    echo "Database not selected";
 }
 ?>
