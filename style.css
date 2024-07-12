@@ -1,0 +1,19 @@
+.form-group {
+  margin-bottom: 15px;
+}
+
+.container {
+  padding: 20px;
+}
+
+input {
+  text-transform: uppercase;
+}
+
+body {
+  padding-top: 60px;
+}
+
+.btn-wide {
+  width: 10%; /* Set width as per your requirement, for example 100% for full width */
+}
