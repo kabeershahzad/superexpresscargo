@@ -51,7 +51,7 @@ $office = $_SESSION['office'];
               <a class="nav-link" href="./createreceipt.php">Dispatch</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./createreceipt.php">Delivery</a>
+              <a class="nav-link" href="./report.php">Delivery</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="./report.php">Report</a>
@@ -83,7 +83,7 @@ $office = $_SESSION['office'];
         <a href="./createreceipt.php"
           ><button class="btn btn-success">Dispatch</button></a
         >
-        <a href="./createreceipt.php"
+        <a href="./report.php"
           ><button class="btn btn-primary">Delivery</button></a
         >
         <a href="./report.php"

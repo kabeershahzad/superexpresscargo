@@ -93,7 +93,7 @@ $results = mysqli_query($con, $query);
 
         <!-- Display Users Data -->
         <h2 class="mt-5">User List</h2>
-        <table class="table table-bordered">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>ID</th>

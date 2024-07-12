@@ -17,7 +17,7 @@ $userid = $_SESSION['userid'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report</title>
+    <title>Delivery</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
@@ -74,7 +74,7 @@ $userid = $_SESSION['userid'];
     <div>
         <button class="btn btn-success mt-5" id="export-btn">Export In Excel</button>
     </div>
-    <table class="table" id="data-table">
+    <table class="table table-striped" id="data-table">
         <thead>
         <tr>
             <th>Shipment Id</th>

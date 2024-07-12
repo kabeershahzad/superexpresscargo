@@ -98,7 +98,7 @@ $userid = $_SESSION['userid'];
           Export In Excel
         </button>
       </div>
-      <table class="table" id="data-table">
+      <table class="table table-striped" id="data-table">
         <thead>
           <tr>
             <th>Shipment Id</th>
