@@ -124,7 +124,8 @@ $userid = $_SESSION['userid'];
        s.weight, s.pieces, s.mode_of_payment, s.rate, s.local_charges, s.packing, s.total_amount
 FROM shipments s
 JOIN users u ON s.origin = u.city
-WHERE u.userid = ?";
+WHERE u.userid = ?
+ORDER BY s.shipment_id DESC";
           
           $stmt = mysqli_prepare($con, $query);
           mysqli_stmt_bind_param($stmt, "i", $userid);
