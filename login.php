@@ -41,19 +41,24 @@ if(isset($_POST['login'])){
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign In</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="login.css" />
   </head>
   <body>
-  <div class="card">
-    <h1>Login</h1>
-    <form id="login" method="post" action="login.php">
-      <label>E-mail address</label>
-      <input type="email" name="email" data-validate="required email" placeholder="user@example.com" />
-      <label>Password</label>
-      <input type="password" data-validate="required" name="password" />
-      <input type="submit" name="login" value="Login" />
-    </form>
-  </div>
+    <div class="card">
+      <h1>Login</h1>
+      <form id="login" method="post" action="login.php">
+        <label>E-mail address</label>
+        <input
+          type="email"
+          name="email"
+          data-validate="required email"
+          placeholder="user@example.com"
+        />
+        <label>Password</label>
+        <input type="password" data-validate="required" name="password" />
+        <input type="submit" name="login" value="Login" />
+      </form>
+    </div>
 
     <script src="login.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
