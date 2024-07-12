@@ -143,6 +143,7 @@ $userid = $_SESSION['userid'];
             echo "<td>" . $row['local_charges'] . "</td>";
             echo "<td>" . $row['packing'] . "</td>";
             echo "<td>" . $row['total_amount'] . "</td>";
+
             echo "</tr>";
         }
         ?>

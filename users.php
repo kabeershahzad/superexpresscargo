@@ -10,9 +10,11 @@ if(isset($_POST['submit'])){
     $password = $_POST['password'];
     $city = $_POST['city'];
     $role = $_POST['role'];
+    $office = $_POST['office'];
+
 
     try{
-        $sql = "INSERT INTO users (name, email, password, city, role) VALUES ('$name', '$email', '$password', '$city', '$role')";
+        $sql = "INSERT INTO users (name, email, password, city, role,office) VALUES ('$name', '$email', '$password', '$city', '$role','$office')";
         $result = mysqli_query($con, $sql);
         if($result){
             echo "<script>alert('User added successfully!')</script>";
@@ -46,10 +48,13 @@ $results = mysqli_query($con, $query);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add User</title>
+    <link rel="stylesheet" href="style.css" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container mt-5">
+    <?php include('adminnav.php') ?>
+    <div class="container">
         <h1>Add User</h1>
         <form id="addUserForm" method="post" action="users.php">
             <div class="mb-3">
@@ -67,6 +72,10 @@ $results = mysqli_query($con, $query);
             <div class="mb-3">
                 <label for="city" class="form-label">City</label>
                 <input type="text" class="form-control" id="city" name="city" required>
+            </div>
+            <div class="mb-3">
+                <label for="office" class="form-label">Office</label>
+                <input type="text" class="form-control" id="office" name="office" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Role</label>

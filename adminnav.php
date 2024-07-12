@@ -14,8 +14,8 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container-fluid">
-        <a class="navbar-brand" href="index.html"
-          >Super Express Cargo Service</a
+        <a class="navbar-brand" href="admin.php"
+          >Admin Super Express</a
         >
         <button
           class="navbar-toggler"
@@ -30,11 +30,12 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
+            
             <li class="nav-item">
-              <a class="nav-link" href="./createreceipt.php">Create Dispatch</a>
+              <a class="nav-link" href="./adminreport.php">Report</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./report.php">Report</a>
+              <a class="nav-link" href="./users.php">Users</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="logout.php" >Logout</a>
