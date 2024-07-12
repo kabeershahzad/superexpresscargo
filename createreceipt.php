@@ -54,6 +54,13 @@ if (isset($_POST['submit'])) {
         echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
     }
 }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Store the submitted date in a variable
+    $submittedDate = $_POST['date'];
+} else {
+    // Default date is today's date
+    $submittedDate = date('Y-m-d');
+}
 ?>
 
 <!DOCTYPE html>
@@ -107,7 +114,7 @@ if (isset($_POST['submit'])) {
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="date">Date:</label>
-                        <input type="date" class="form-control" id="date" name="date" required />
+                        <input type="date" class="form-control" id="date" name="date" value="<?php echo $submittedDate; ?>" required />
                     </div>
                     <div class="form-group">
                         <label for="origin">Origin:</label>
