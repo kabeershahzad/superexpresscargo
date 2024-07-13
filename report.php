@@ -45,11 +45,9 @@ $userid = $_SESSION['userid'];
                     <a class="nav-link" href="./createreceipt.php">Dispatch</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="./createreceipt.php">Delivery</a>
+                    <a class="nav-link" href="./report.php">Delivery</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./report.php">Report</a>
-                </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="logout.php">Logout</a>
                 </li>
@@ -92,6 +90,8 @@ $userid = $_SESSION['userid'];
             <th>Local</th>
             <th>Packing</th>
             <th>Total Amount</th>
+            <th>Office</th>
+
         </tr>
         </thead>
         <tbody id="table-body">
@@ -114,7 +114,8 @@ $userid = $_SESSION['userid'];
                     s.rate,
                     s.local_charges,
                     s.packing,
-                    s.total_amount
+                    s.total_amount,
+                    s.office
                 FROM 
                     shipments s
                 JOIN 
@@ -122,7 +123,9 @@ $userid = $_SESSION['userid'];
                 ON 
                     s.destination = u.city
                 WHERE 
-                    u.userid = '$userid'";
+                    u.userid = '$userid'
+                ORDER BY 
+                    s.shipment_id DESC";
 
         $result = mysqli_query($con, $query);
 
@@ -143,6 +146,8 @@ $userid = $_SESSION['userid'];
             echo "<td>" . $row['local_charges'] . "</td>";
             echo "<td>" . $row['packing'] . "</td>";
             echo "<td>" . $row['total_amount'] . "</td>";
+            echo "<td>" . $row['office'] . "</td>";
+
 
             echo "</tr>";
         }

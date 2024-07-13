@@ -241,7 +241,7 @@
                       ],
                       [
                         {
-                          text: `Mian Karachi Office: G-56, Deans Market, Main Tariq Road, Karachi\n\nContact: 021-34382313, 0321-9285851, 0321-8756687`,
+                          text: `Main Karachi Office: G-56, Deans Market, Main Tariq Road, Karachi\n\nContact: 021-34382313, 0321-9285851, 0321-8756687`,
                           alignment: "center",
                           colSpan: 3, // Span the entire width of the table
                         },
@@ -475,7 +475,7 @@
                       ],
                       [
                         {
-                          text: `Mian Karachi Office: G-56, Deans Market, Main Tariq Road, Karachi\n\nContact: 021-34382313, 0321-9285851, 0321-8756687`,
+                          text: `Main Karachi Office: G-56, Deans Market, Main Tariq Road, Karachi\n\nContact: 021-34382313, 0321-9285851, 0321-8756687`,
                           alignment: "center",
                           colSpan: 3, // Span the entire width of the table
                         },

@@ -35,12 +35,11 @@ if (isset($_POST['submit'])) {
     $local_charges = $_POST['local-charges'];
     $packing = $_POST['packing'];
     $total_amount = $_POST['total-amount'];
-    $office=$_POST['office'];
 
     // Prepare and execute the SQL statement
     try {
         $stmt = "INSERT INTO shipments (date, origin, destination, receipt_no, shipper_name, shipper_contact, consignee_name, consignee_contact, weight, pieces, mode_of_payment, rate, local_charges, packing, total_amount, office) 
-                 VALUES ('$date', '$origin', '$destination', '$receipt', '$shipper_name', '$shipper_contact', '$consignee_name', '$consignee_contact', '$weight', '$pieces', '$mode_of_payment', '$rate', '$local_charges', '$packing', '$total_amount','$office')";
+                 VALUES ('$date', '$origin', '$destination', '$receipt', '$shipper_name', '$shipper_contact', '$consignee_name', '$consignee_contact', '$weight', '$pieces', '$mode_of_payment', '$rate', '$local_charges', '$packing', '$total_amount','$userOffice')";
 
         $result = mysqli_query($con, $stmt);
 
@@ -59,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $submittedDate = $_POST['date'];
 } else {
     // Default date is today's date
-    $submittedDate = date('Y-m-d');
+  
 }
 ?>
 
@@ -71,9 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create New Dispatch</title>
-    <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.8.4/firebase-auth-compat.js"></script>
+  
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css" />
@@ -82,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">Super Express Cargo Service</a>
+            <a class="navbar-brand" href="index.php">Super Express Cargo Service</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -93,11 +90,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <a class="nav-link" href="./createreceipt.php">Dispatch</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./createreceipt.php">Delivery</a>
+                        <a class="nav-link" href="./report.php">Delivery</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./report.php">Report</a>
-                    </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php">Logout</a>
                     </li>
@@ -121,11 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="text" class="form-control" id="origin" name="origin" value="<?php echo $userCity; ?>"
                             readonly required />
                     </div>
-                    <div class="form-group">
-                        <label for="office">Office:</label>
-                        <input type="text" class="form-control" id="office" name="office" value="<?php echo $userOffice; ?>"
-                            readonly required />
-                    </div>
+                    
                     <div class="form-group">
                         <label for="destination">Destination:</label>
                         <select class="form-control" id="destination" name="destination" required>
@@ -227,73 +218,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const weightInput = document.getElementById("weight");
-            const rateInput = document.getElementById("rate");
-            const localChargesInput = document.getElementById("local-charges");
-            const packingInput = document.getElementById("packing");
-            const totalAmountInput = document.getElementById("total-amount");
+       document.addEventListener("DOMContentLoaded", function () {
+    const weightInput = document.getElementById("weight");
+    const rateInput = document.getElementById("rate");
+    const localChargesInput = document.getElementById("local-charges");
+    const packingInput = document.getElementById("packing");
+    const totalAmountInput = document.getElementById("total-amount");
 
-            // Add event listeners to the necessary fields
-            weightInput.addEventListener("input", calculateTotalAmount);
-            rateInput.addEventListener("input", calculateTotalAmount);
-            localChargesInput.addEventListener("input", calculateTotalAmount);
-            packingInput.addEventListener("input", calculateTotalAmount);
+    // Add event listeners to the necessary fields
+    weightInput.addEventListener("input", calculateTotalAmount);
+    rateInput.addEventListener("input", calculateTotalAmount);
+    localChargesInput.addEventListener("input", calculateTotalAmount);
+    packingInput.addEventListener("input", calculateTotalAmount);
 
-            function calculateTotalAmount() {
-                const weight = parseFloat(weightInput.value) || 0;
-                const rate = parseFloat(rateInput.value) || 0;
-                const localCharges = parseFloat(localChargesInput.value) || 0;
-                const packing = parseFloat(packingInput.value) || 0;
+    function calculateTotalAmount() {
+        const weight = parseFloat(weightInput.value) || 0;
+        const rate = parseFloat(rateInput.value) || 0;
+        const localCharges = parseFloat(localChargesInput.value) || 0;
+        const packing = parseFloat(packingInput.value) || 0;
 
-                const totalAmount = weight * rate + localCharges + packing;
-                totalAmountInput.value = totalAmount.toFixed(0);
-            }
-        });
+        const totalAmount = weight * rate + localCharges + packing;
+        totalAmountInput.value = totalAmount.toFixed(0);
+    }
 
-        const destinationSelect = document.getElementById("destination");
-        const receiptInput = document.getElementById("receipt");
+    const destinationSelect = document.getElementById("destination");
+    const receiptInput = document.getElementById("receipt");
 
-        destinationSelect.addEventListener("change", updateReceiptNumber);
+    destinationSelect.addEventListener("change", updateReceiptNumber);
 
-        function updateReceiptNumber() {
-            const destinationValue = destinationSelect.value;
-            const randomNumber = generateRandomNumber(7);
+    function updateReceiptNumber() {
+        const destinationValue = destinationSelect.value;
+        const randomNumber = generateRandomNumber(7);
 
-            // Format the receipt number as "SUPER-random-Destination"
-            const receiptNumber = `SUPER-${randomNumber}-${destinationValue}`;
+        // Format the receipt number as "SUPER-random-Destination"
+        const receiptNumber = `SUPER-${randomNumber}-${destinationValue}`;
 
-            receiptInput.value = receiptNumber;
+        receiptInput.value = receiptNumber;
+    }
+
+    function generateRandomNumber(digits) {
+        const min = Math.pow(10, digits - 1);
+        const max = Math.pow(10, digits) - 1;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    const shipperContactInput = document.getElementById("shipper-contact");
+    const noNumberCheckbox = document.getElementById("no-number-checkbox");
+    const consigneeContactInput = document.getElementById("consignee-contact");
+    const noNumberCheckbox2 = document.getElementById("no-number-checkbox2");
+
+    const hiddenShipperContactInput = document.getElementById("hidden-shipper-contact");
+    const hiddenConsigneeContactInput = document.getElementById("hidden-consignee-contact");
+
+    // Add event listeners to the checkboxes
+    noNumberCheckbox.addEventListener("change", toggleShipperContactInput);
+    noNumberCheckbox2.addEventListener("change", toggleConsigneeContactInput);
+
+    function toggleShipperContactInput() {
+        if (noNumberCheckbox.checked) {
+            shipperContactInput.value = "-";
+            hiddenShipperContactInput.value = "-";
+        } else {
+            shipperContactInput.value = "";
+            hiddenShipperContactInput.value = "";
         }
+        shipperContactInput.disabled = noNumberCheckbox.checked;
+        shipperContactInput.required = !noNumberCheckbox.checked;
+    }
 
-        function generateRandomNumber(digits) {
-            const min = Math.pow(10, digits - 1);
-            const max = Math.pow(10, digits) - 1;
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+    function toggleConsigneeContactInput() {
+        if (noNumberCheckbox2.checked) {
+            consigneeContactInput.value = "-";
+            hiddenConsigneeContactInput.value = "-";
+        } else {
+            consigneeContactInput.value = "";
+            hiddenConsigneeContactInput.value = "";
         }
+        consigneeContactInput.disabled = noNumberCheckbox2.checked;
+        consigneeContactInput.required = !noNumberCheckbox2.checked;
+    }
+});
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const shipperContactInput = document.getElementById("shipper-contact");
-            const noNumberCheckbox = document.getElementById("no-number-checkbox");
-            const consigneeContactInput = document.getElementById("consignee-contact");
-            const noNumberCheckbox2 = document.getElementById("no-number-checkbox2");
 
-            // Add event listeners to the checkboxes
-            noNumberCheckbox.addEventListener("change", toggleShipperContactInput);
-            noNumberCheckbox2.addEventListener("change", toggleConsigneeContactInput);
-
-            function toggleShipperContactInput() {
-                shipperContactInput.value = noNumberCheckbox.checked ? "-" : "";
-                shipperContactInput.disabled = noNumberCheckbox.checked;
-                shipperContactInput.required = !noNumberCheckbox.checked;
-            }
-
-            function toggleConsigneeContactInput() {
-                consigneeContactInput.value = noNumberCheckbox2.checked ? "-" : "";
-                consigneeContactInput.disabled = noNumberCheckbox2.checked;
-                consigneeContactInput.required = !noNumberCheckbox2.checked;
-            }
-        });
     </script>
 </body>
 

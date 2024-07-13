@@ -38,29 +38,119 @@ if(isset($_POST['login'])){
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In</title>
-    <link rel="stylesheet" href="login.css" />
+    <title>Login Page</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+        font-family: "Montserrat", sans-serif;
+      }
+      .bg {
+        background-color: beige;
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      .login-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .login-card {
+        width: 100%;
+        max-width: 400px;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: white;
+      }
+      .logo {
+        width: 100px;
+        margin-bottom: 1rem;
+      }
+      .form-control {
+        width: 100%; /* Ensures the input fields take up the full width of the card */
+      }
+      .card-title {
+        font-weight: bold; /* Make the login title bold */
+      }
+      label {
+        text-align: left; /* Align labels to the left */
+      }
+      .footer {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+    </style>
   </head>
   <body>
-    <div class="card">
-      <h1>Login</h1>
-      <form id="login" method="post" action="login.php">
-        <label>E-mail address</label>
-        <input
-          type="email"
-          name="email"
-          data-validate="required email"
-          placeholder="user@example.com"
-        />
-        <label>Password</label>
-        <input type="password" data-validate="required" name="password" />
-        <input type="submit" name="login" value="Login" />
-      </form>
+    <div class="bg">
+      <div class="container login-container">
+        <div class="text-center">
+          <img src="./images/super-express-cargo.png" alt="Logo" class="logo" />
+          <!-- Replace with your logo URL -->
+          <h1>Super Express Cargo</h1>
+          <div class="card login-card">
+            <div class="card-body">
+              <h5 class="card-title text-center">Login</h5>
+              <form id="login" method="post" action="login.php">
+                <div class="form-group">
+                  <label for="email">Email address</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    placeholder="Enter email"
+                    name="email"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    placeholder="Password"
+                    name="password"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  name="login"
+                  class="btn btn-primary btn-block"
+                >
+                  Login
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">Developed by Kabeer</div>
     </div>
 
+    <!-- Bootstrap JS and dependencies -->
     <script src="login.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>

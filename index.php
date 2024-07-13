@@ -54,7 +54,6 @@ $office = $_SESSION['office'];
               <a class="nav-link" href="./report.php">Delivery</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="./report.php">Report</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="logout.php">Logout</a>
@@ -86,9 +85,7 @@ $office = $_SESSION['office'];
         <a href="./report.php"
           ><button class="btn btn-primary">Delivery</button></a
         >
-        <a href="./report.php"
-          ><button class="btn btn-warning">Report</button></a
-        >
+       
         <a href="./logout.php"
           ><button class="btn btn-danger">Logout</button></a
         >
