@@ -27,6 +27,8 @@ $office = $_SESSION['office'];
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
     />
+    <link rel="icon" type="image/x-icon" href="./images/super-express-cargo.ico">
+
     
     <link rel="stylesheet" href="index.css" />
   </head>

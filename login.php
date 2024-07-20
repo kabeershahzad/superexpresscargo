@@ -50,6 +50,8 @@ if(isset($_POST['login'])){
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" type="image/x-icon" href="./images/super-express-cargo.ico">
+
     <style>
       body,
       html {
@@ -58,8 +60,8 @@ if(isset($_POST['login'])){
         font-family: "Montserrat", sans-serif;
       }
       .bg {
-        background-color: beige;
-        height: 100%;
+        background: rgb(2,0,36);
+        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,109,121,1) 50%, rgba(2,0,36,1) 100%);        height: 100%;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -70,6 +72,10 @@ if(isset($_POST['login'])){
         justify-content: center;
         align-items: center;
       }
+      label {
+            text-align: left; /* Align labels to the left */
+            display: block; /* Make labels block elements */
+        }
       .login-card {
         width: 100%;
         max-width: 400px;
@@ -79,8 +85,8 @@ if(isset($_POST['login'])){
         background-color: white;
       }
       .logo {
-        width: 100px;
-        margin-bottom: 1rem;
+        width: 100px; /* Set the width to 100px */
+        margin-bottom: 1rem; /* Add bottom margin */
       }
       .form-control {
         width: 100%; /* Ensures the input fields take up the full width of the card */
@@ -90,13 +96,18 @@ if(isset($_POST['login'])){
       }
       label {
         text-align: left; /* Align labels to the left */
+
       }
       .footer {
         position: absolute;
         bottom: 10px;
         right: 20px;
         font-size: 0.9rem;
-        color: #555;
+        color:cadetblue;
+      }
+      h1{
+        color:white;
+        
       }
     </style>
   </head>
@@ -110,6 +121,7 @@ if(isset($_POST['login'])){
           <div class="card login-card">
             <div class="card-body">
               <h5 class="card-title text-center">Login</h5>
+              <br>
               <form id="login" method="post" action="login.php">
                 <div class="form-group">
                   <label for="email">Email address</label>
@@ -131,6 +143,7 @@ if(isset($_POST['login'])){
                     name="password"
                   />
                 </div>
+                <br>
                 <button
                   type="submit"
                   name="login"

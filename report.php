@@ -31,6 +31,8 @@ $userid = $_SESSION['userid'];
             font-size: 15px;
         }
     </style>
+        <link rel="icon" type="image/x-icon" href="./images/super-express-cargo.ico">
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -187,7 +189,7 @@ $userid = $_SESSION['userid'];
         visibleRows.forEach(function (row) {
             row.addEventListener("click", function () {
                 var shipmentId = row.cells[4].textContent;
-                var url = "print_invoice.html?id=" + shipmentId;
+                var url = "print_invoice.php?id=" + shipmentId;
                 window.open(url, "_blank");
             });
         });

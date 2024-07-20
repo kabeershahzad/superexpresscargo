@@ -18,16 +18,13 @@ $row = mysqli_fetch_assoc($result);
 $userCity = $row['city'];
 $userOffice = $row['office'];
 
-
 if (isset($_POST['submit'])) {
     $date = $_POST['date'];
     $origin = $_POST['origin'];
     $destination = $_POST['destination'];
     $receipt = $_POST['receipt'];
     $shipper_name = $_POST['shipper-name'];
-    $shipper_contact = $_POST['shipper-contact'];
     $consignee_name = $_POST['consignee-name'];
-    $consignee_contact = $_POST['consignee-contact'];
     $weight = $_POST['weight'];
     $pieces = $_POST['pcs'];
     $mode_of_payment = $_POST['mode-of-payment'];
@@ -35,6 +32,19 @@ if (isset($_POST['submit'])) {
     $local_charges = $_POST['local-charges'];
     $packing = $_POST['packing'];
     $total_amount = $_POST['total-amount'];
+
+    // Check if 'No Number' checkboxes are checked and set contact numbers accordingly
+    if (isset($_POST['no-number-checkbox'])) {
+        $shipper_contact = '-';
+    } else {
+        $shipper_contact = $_POST['shipper-contact'];
+    }
+
+    if (isset($_POST['no-number-consignee-checkbox'])) {
+        $consignee_contact = '-';
+    } else {
+        $consignee_contact = $_POST['consignee-contact'];
+    }
 
     // Prepare and execute the SQL statement
     try {
@@ -53,14 +63,13 @@ if (isset($_POST['submit'])) {
         echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
     }
 }
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Store the submitted date in a variable
     $submittedDate = $_POST['date'];
-} else {
-    // Default date is today's date
-  
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,11 +78,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create New Dispatch</title>
+    <title>New Dispatch</title>
   
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css" />
+    <style>
+        input,option,select,input-group,.form-check-label{
+            cursor: pointer;
+        }
+        label{
+            font-weight: bold;
+        }
+        .input-group-append{
+            font-weight: normal;
+        }
+    </style>
+        <link rel="icon" type="image/x-icon" href="./images/super-express-cargo.ico">
+
 </head>
 
 <body>
@@ -109,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="date">Date:</label>
-                        <input type="date" class="form-control" id="date" name="date" value="<?php echo $submittedDate; ?>" required />
+                        <input type="date" class="form-control" id="date" name="date"  required />
                     </div>
                     <div class="form-group">
                         <label for="origin">Origin:</label>
@@ -123,8 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <option value="">Select destination</option>
                             <?php
                             // Array of destination cities (modify as per your actual cities)
-                            $destinationCities = array("Faisalabad", "Karachi", "Lahore");
-
+                            $destinationCities = array("Karachi", "Hydrabad", "Lahore","Islamabad","Rawalpindi","Multan","Gujranwala","Sialkot","Gujrat","Faisalabad","Sarghoda","Bahawalpur");
                             // Remove $userCity from $destinationCities array
                             if (($key = array_search($userCity, $destinationCities)) !== false) {
                                 unset($destinationCities[$key]);
@@ -146,33 +167,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <input type="text" class="form-control" id="shipper-name" name="shipper-name" required />
                     </div>
                     <div class="form-group">
-                        <label for="shipper-contact">Shipper Contact:</label>
-                        <div class="input-group">
-                            <input type="tel" class="form-control" id="shipper-contact" name="shipper-contact" required />
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <input type="checkbox" id="no-number-checkbox" />
-                                    <label for="no-number-checkbox" class="form-check-label">No Number</label>
-                                </div>
-                            </div>
+                <label for="shipper-contact">Shipper Contact:</label>
+                <div class="input-group">
+                    <input type="tel" class="form-control" id="shipper-contact" name="shipper-contact" required />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <input type="checkbox" id="no-number-checkbox" name="no-number-checkbox" />
+                            <label for="no-number-checkbox" class="form-check-label">No Number</label>
                         </div>
                     </div>
+                </div>
+            </div>
                     <div class="form-group">
                         <label for="consignee-name">Consignee Name:</label>
                         <input type="text" class="form-control" id="consignee-name" name="consignee-name" required />
                     </div>
                     <div class="form-group">
-                        <label for="consignee-contact">Consignee Contact:</label>
-                        <div class="input-group">
-                            <input type="tel" class="form-control" id="consignee-contact" name="consignee-contact" required />
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <input type="checkbox" id="no-number-checkbox2" />
-                                    <label for="no-number-checkbox2" class="form-check-label">No Number</label>
-                                </div>
-                            </div>
+                <label for="consignee-contact">Consignee Contact:</label>
+                <div class="input-group">
+                    <input type="tel" class="form-control" id="consignee-contact" name="consignee-contact" required />
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <input type="checkbox" id="no-number-consignee-checkbox" name="no-number-consignee-checkbox" />
+                            <label for="no-number-consignee-checkbox" class="form-check-label">No Number</label>
                         </div>
                     </div>
+                </div>
+            </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
@@ -208,8 +229,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <label for="total-amount">Total Amount:</label>
                         <input type="number" class="form-control" id="total-amount" name="total-amount" required />
                     </div>
+                    <br>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success btn-wide" name="submit">Submit</button>
+                        <button type="submit" class="btn btn-success btn-block" name="submit">Submit</button>
                     </div>
                 </div>
             </div>
@@ -217,90 +239,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php include('dispatch_list_bottom.php'); ?>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-       document.addEventListener("DOMContentLoaded", function () {
-    const weightInput = document.getElementById("weight");
-    const rateInput = document.getElementById("rate");
-    const localChargesInput = document.getElementById("local-charges");
-    const packingInput = document.getElementById("packing");
-    const totalAmountInput = document.getElementById("total-amount");
-
-    // Add event listeners to the necessary fields
-    weightInput.addEventListener("input", calculateTotalAmount);
-    rateInput.addEventListener("input", calculateTotalAmount);
-    localChargesInput.addEventListener("input", calculateTotalAmount);
-    packingInput.addEventListener("input", calculateTotalAmount);
-
-    function calculateTotalAmount() {
-        const weight = parseFloat(weightInput.value) || 0;
-        const rate = parseFloat(rateInput.value) || 0;
-        const localCharges = parseFloat(localChargesInput.value) || 0;
-        const packing = parseFloat(packingInput.value) || 0;
-
-        const totalAmount = weight * rate + localCharges + packing;
-        totalAmountInput.value = totalAmount.toFixed(0);
-    }
-
-    const destinationSelect = document.getElementById("destination");
-    const receiptInput = document.getElementById("receipt");
-
-    destinationSelect.addEventListener("change", updateReceiptNumber);
-
-    function updateReceiptNumber() {
-        const destinationValue = destinationSelect.value;
-        const randomNumber = generateRandomNumber(7);
-
-        // Format the receipt number as "SUPER-random-Destination"
-        const receiptNumber = `SUPER-${randomNumber}-${destinationValue}`;
-
-        receiptInput.value = receiptNumber;
-    }
-
-    function generateRandomNumber(digits) {
-        const min = Math.pow(10, digits - 1);
-        const max = Math.pow(10, digits) - 1;
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    const shipperContactInput = document.getElementById("shipper-contact");
-    const noNumberCheckbox = document.getElementById("no-number-checkbox");
-    const consigneeContactInput = document.getElementById("consignee-contact");
-    const noNumberCheckbox2 = document.getElementById("no-number-checkbox2");
-
-    const hiddenShipperContactInput = document.getElementById("hidden-shipper-contact");
-    const hiddenConsigneeContactInput = document.getElementById("hidden-consignee-contact");
-
-    // Add event listeners to the checkboxes
-    noNumberCheckbox.addEventListener("change", toggleShipperContactInput);
-    noNumberCheckbox2.addEventListener("change", toggleConsigneeContactInput);
-
-    function toggleShipperContactInput() {
-        if (noNumberCheckbox.checked) {
-            shipperContactInput.value = "-";
-            hiddenShipperContactInput.value = "-";
-        } else {
-            shipperContactInput.value = "";
-            hiddenShipperContactInput.value = "";
-        }
-        shipperContactInput.disabled = noNumberCheckbox.checked;
-        shipperContactInput.required = !noNumberCheckbox.checked;
-    }
-
-    function toggleConsigneeContactInput() {
-        if (noNumberCheckbox2.checked) {
-            consigneeContactInput.value = "-";
-            hiddenConsigneeContactInput.value = "-";
-        } else {
-            consigneeContactInput.value = "";
-            hiddenConsigneeContactInput.value = "";
-        }
-        consigneeContactInput.disabled = noNumberCheckbox2.checked;
-        consigneeContactInput.required = !noNumberCheckbox2.checked;
-    }
-});
-
-
-    </script>
+    <script src="./createreceipt.js"></script>
 </body>
 
 </html>
