@@ -29,9 +29,10 @@ if(isset($_POST['login'])){
         } else if($row['role'] == 2){
             header('location:index.php');
         }
+        exit();
     } else {
-        echo "Incorrect username or password.";    
-    }
+      $error_message = "Incorrect email or password.";    
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -56,12 +57,27 @@ if(isset($_POST['login'])){
       body,
       html {
         height: 100%;
+        position: relative;
         margin: 0;
         font-family: "Montserrat", sans-serif;
+        background-image: url("./images/bg.png"); /* Update with your image path */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        overflow: hidden; /* Prevent horizontal scroll */
+
       }
+      .error-message {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
       .bg {
-        background: rgb(2,0,36);
-        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,109,121,1) 50%, rgba(2,0,36,1) 100%);        height: 100%;
+        height:100%;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -102,11 +118,11 @@ if(isset($_POST['login'])){
         position: absolute;
         bottom: 10px;
         right: 20px;
-        font-size: 0.9rem;
-        color:cadetblue;
-      }
+        font-size: 1.2rem;
+        color: white;      }
       h1{
         color:white;
+
         
       }
     </style>
@@ -131,6 +147,7 @@ if(isset($_POST['login'])){
                     id="email"
                     placeholder="Enter email"
                     name="email"
+                    required
                   />
                 </div>
                 <div class="form-group">
@@ -141,8 +158,15 @@ if(isset($_POST['login'])){
                     id="password"
                     placeholder="Password"
                     name="password"
+                    required
                   />
                 </div>
+                <?php if (!empty($error_message)): ?>
+                <div class="error-message">
+                  <?php echo $error_message; ?>
+                </div>
+              <?php endif; ?>
+              
                 <br>
                 <button
                   type="submit"
@@ -156,12 +180,16 @@ if(isset($_POST['login'])){
           </div>
         </div>
       </div>
-      <div class="footer">Developed by Kabeer</div>
-    </div>
-
+      <a href="javascript:void(0);" onclick="showAlert()">
+        <div class="footer">Developed by Kabeer</div>
+    </a>
     <!-- Bootstrap JS and dependencies -->
-    <script src="login.js"></script>
-
+    <!-- <script src="login.js"></script> -->
+    <script>
+        function showAlert() {
+            alert("Developed by Kabeer\nContact: 03138904098"); // Replace with actual contact info
+        }
+    </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

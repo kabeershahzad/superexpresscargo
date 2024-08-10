@@ -1,10 +1,9 @@
 <?php
 include('config.php');
 // Start session at the very beginning
-//session_start();
 
 // Check if user is logged in
-if(!isset($_SESSION['userid'])){
+if (!isset($_SESSION['userid'])) {
     header('location:login.php');
     exit();
 }
@@ -18,271 +17,247 @@ $userid = $_SESSION['userid'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Delivery</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
     <style>
-        body {
+
+body {
             padding-top: 60px;
         }
         tr {
             cursor: pointer;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-            font-size: 15px;
+            font-size: 16px;
+            font-weight: 500px;
         }
-    </style>
-        <link rel="icon" type="image/x-icon" href="./images/super-express-cargo.ico">
+        /* Adjust the table row size */
+        #myTable tbody tr {
+            height: 70px; /* Adjust this value as needed */
+        }
 
+        /* Optional: Center align text vertically within table cells */
+        #myTable tbody td {
+            vertical-align: middle;
+        }
+
+        /* Adjust the column sizes */
+         #myTable td {
+            white-space: nowrap; /* Prevents text from wrapping */
+            
+        }
+        h2{
+            border-radius: 10px;
+            padding: 5px;            
+        }
+        
+    </style>
+    <link rel="icon" type="image/x-icon" href="./images/super-express-cargo.ico">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="index.php">Super Express Cargo Service</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="./createreceipt.php">Dispatch</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./report.php">Delivery</a>
-                </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="logout.php">Logout</a>
-                </li>
-            </ul>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.php">Super Express Cargo Service</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./createreceipt.php">Dispatch</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./report.php">Delivery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php">Logout</a>
+                    </li>
+                    <!-- Add more menu items for the admin panel -->
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<div class="container">
-    <div class="input-group mt-3">
-        <input type="text" class="form-control" id="search-input" placeholder="Search">
-    </div>
-    <div class="dropdown mt-5">
-        <label for="entries-per-page">Entries per page:</label>
-        <select id="entries-per-page">
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-    </div>
-    <div>
-        <button class="btn btn-success mt-5" id="export-btn">Export In Excel</button>
-    </div>
-    <table class="table table-striped" id="data-table">
-        <thead>
-        <tr>
-            <th>Shipment Id</th>
-            <th>Date</th>
-            <th>Origin</th>
-            <th>Destination</th>
-            <th>Receipt#</th>
-            <th>Shipper</th>
-            <th>Shipper Contact</th>
-            <th>Consignee</th>
-            <th>Consignee Contact</th>
-            <th>Weight</th>
-            <th>Pcs</th>
-            <th>Rate</th>
-            <th>Local</th>
-            <th>Packing</th>
-            <th>Total Amount</th>
-            <th>Office</th>
-
-        </tr>
-        </thead>
-        <tbody id="table-body">
-        <?php
-        include('config.php');
-
-        $query = "SELECT 
-                    s.shipment_id,
-                    s.date,
-                    s.origin,
-                    s.destination,
-                    s.receipt_no,
-                    s.shipper_name,
-                    s.shipper_contact,
-                    s.consignee_name,
-                    s.consignee_contact,
-                    s.weight,
-                    s.pieces,
-                    s.mode_of_payment,
-                    s.rate,
-                    s.local_charges,
-                    s.packing,
-                    s.total_amount,
-                    s.office
-                FROM 
-                    shipments s
-                JOIN 
-                    users u 
-                ON 
-                    s.destination = u.city
-                WHERE 
-                    u.userid = '$userid'
-                ORDER BY 
-                    s.shipment_id DESC";
-
-        $result = mysqli_query($con, $query);
-
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<tr>";
-            echo "<td>" . $row['shipment_id'] . "</td>";
-            echo "<td>" . date("d-m-Y", strtotime($row['date'])) . "</td>";
-            echo "<td>" . $row['origin'] . "</td>";
-            echo "<td>" . $row['destination'] . "</td>";
-            echo "<td>" . $row['receipt_no'] . "</td>";
-            echo "<td>" . $row['shipper_name'] . "</td>";
-            echo "<td>" . $row['shipper_contact'] . "</td>";
-            echo "<td>" . $row['consignee_name'] . "</td>";
-            echo "<td>" . $row['consignee_contact'] . "</td>";
-            echo "<td>" . $row['weight'] . "</td>";
-            echo "<td>" . $row['pieces'] . "</td>";
-            echo "<td>" . $row['rate'] . "</td>";
-            echo "<td>" . $row['local_charges'] . "</td>";
-            echo "<td>" . $row['packing'] . "</td>";
-            echo "<td>" . $row['total_amount'] . "</td>";
-            echo "<td>" . $row['office'] . "</td>";
-
-
-            echo "</tr>";
-        }
-        ?>
-        </tbody>
-    </table>
-</div>
 <div class="container mt-3">
-    <div class="text-center" id="loading-icon" style="display: none;">
+    <h2 class="text-center">DELIVERY</h2>
+
+    <!-- Export Button -->
+    <div class="mt-3">
+        <button class="btn btn-success" id="export-btn">Export to Excel</button>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-responsive mt-3">
+        <table class="table table-striped" id="myTable">
+            <thead>
+                <tr class="text-center">
+                    <th>Action</th>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+                    <th>Receipt#</th>
+                    <th>Status</th>
+                    <th>Shipper</th>
+                    <th>Shipper Contact</th>
+                    <th>Consignee</th>
+                    <th>Consignee Contact</th>
+                    <th>Weight</th>
+                    <th>Pcs</th>
+                    <th>Rate</th>
+                    <th>Local</th>
+                    <th>Packing</th>
+                    <th>Total Amount</th>
+                    <th>Office</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                <?php
+                include('config.php');
+                
+                $query = "SELECT 
+                            s.shipment_id,
+                            s.date,
+                            s.origin,
+                            s.destination,
+                            s.receipt_no,
+                            s.shipper_name,
+                            s.shipper_contact,
+                            s.consignee_name,
+                            s.consignee_contact,
+                            s.weight,
+                            s.pieces,
+                            s.mode_of_payment,
+                            s.rate,
+                            s.local_charges,
+                            s.packing,
+                            s.total_amount,
+                            s.office,
+                            s.status
+                        FROM 
+                            shipments s
+                        JOIN 
+                            users u 
+                        ON 
+                            s.destination = u.city
+                        WHERE 
+                            u.userid = '$userid'
+                        ORDER BY 
+                            s.shipment_id DESC";
+                
+                $result = mysqli_query($con, $query);
+                
+                while ($row = mysqli_fetch_assoc($result)) :
+                    $statusClass = $row['status'] == 'DISPATCHED' ? 'bg-warning text-black' : 'bg-success text-white';
+                    $disabled = $row['status'] == 'DELIVER' ? "disabled" : "";
+                ?>
+                    <tr data-id="<?php echo htmlspecialchars($row['shipment_id']); ?>">
+                        <td>
+                            <button type="button" class="btn btn-success deliver-btn" data-id="<?php echo htmlspecialchars($row['shipment_id']); ?>" <?php echo $disabled; ?>>
+                                Deliver
+                            </button>
+                        </td>
+                        <td><?php echo htmlspecialchars($row['shipment_id']); ?></td>
+                        <td><?php echo date("d-m-Y", strtotime($row['date'])); ?></td>
+                        <td><?php echo htmlspecialchars($row['origin']); ?></td>
+                        <td><?php echo htmlspecialchars($row['destination']); ?></td>
+                        <td><?php echo htmlspecialchars($row['receipt_no']); ?></td>
+                        <td class="<?php echo $statusClass; ?> text-center">
+                            <span style="font-weight: bold;"><?php echo htmlspecialchars($row['status']); ?></span>
+                        </td>
+                        <td><?php echo htmlspecialchars($row['shipper_name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['shipper_contact']); ?></td>
+                        <td><?php echo htmlspecialchars($row['consignee_name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['consignee_contact']); ?></td>
+                        <td><?php echo htmlspecialchars($row['weight']); ?></td>
+                        <td><?php echo htmlspecialchars($row['pieces']); ?></td>
+                        <td><?php echo htmlspecialchars($row['rate']); ?></td>
+                        <td><?php echo htmlspecialchars($row['local_charges']); ?></td>
+                        <td><?php echo htmlspecialchars($row['packing']); ?></td>
+                        <td><?php echo htmlspecialchars($row['total_amount']); ?></td>
+                        <td><?php echo htmlspecialchars($row['office']); ?></td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Loading Icon -->
+    <div class="text-center mt-3" id="loading-icon" style="display: none;">
         <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 <script>
-    var searchInput = document.getElementById("search-input");
-    var tableBody = document.getElementById("table-body");
-    var entriesPerPageSelect = document.getElementById("entries-per-page");
-    var currentPage = 1;
-    var entriesPerPage = 10;
-    var totalPages = 0;
-
-    function updateTablePagination(entriesPerPage) {
-        var tableRows = Array.from(tableBody.getElementsByTagName("tr"));
-        totalPages = Math.ceil(tableRows.length / entriesPerPage);
-        tableRows.forEach(function (row) {
-            row.style.display = "none";
-        });
-        var startIndex = (currentPage - 1) * entriesPerPage;
-        var endIndex = startIndex + entriesPerPage;
-        var visibleRows = tableRows.slice(startIndex, endIndex);
-        visibleRows.forEach(function (row) {
-            row.style.display = "";
-        });
-
-        visibleRows.forEach(function (row) {
-            row.addEventListener("click", function () {
-                var shipmentId = row.cells[4].textContent;
-                var url = "print_invoice.php?id=" + shipmentId;
-                window.open(url, "_blank");
-            });
-        });
-    }
-
-    function goToPage(page) {
-        if (page < 1 || page > totalPages) {
-            return;
-        }
-        currentPage = page;
-        updateTablePagination(entriesPerPage);
-        updatePaginationButtons();
-    }
-
-    entriesPerPageSelect.addEventListener("change", function () {
-        entriesPerPage = parseInt(this.value);
-        currentPage = 1;
-        updateTablePagination(entriesPerPage);
-        updatePaginationButtons();
+    $(document).ready(function () {
+        const deliverButtons = document.querySelectorAll(".deliver-btn");
+        deliverButtons.forEach((button) => {
+        button.addEventListener("click", function (event) {
+      event.stopPropagation();
+      const shipmentId = this.getAttribute("data-id");
+      if (
+        confirm("Are you sure you want to mark this shipment as delivered?")
+      ) {
+        fetch("update_status.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({ shipment_id: shipmentId }),
+        })
+          .then((response) => response.text())
+          .then((text) => {
+            alert(text);
+            location.reload();
+          })
+          .catch((error) => alert("An error occurred: " + error));
+      }
     });
+  });
+  $("#myTable").DataTable({
+    order: [[0, "desc"]], // Sorting by the first column (ID) in descending order
+  });
 
-    function createPaginationButton(text, page) {
-        var button = document.createElement("button");
-        button.classList.add("btn", "btn-secondary", "me-2");
-        button.textContent = text;
-        button.addEventListener("click", function () {
-            goToPage(page);
-        });
-        return button;
-    }
+  // Add click event listener to visible rows
+  $("#myTable tbody").on("click", "tr", function () {
+    var shipmentId = $(this).find("td").eq(5).text();
+    var url = "print_invoice.php?id=" + shipmentId;
+    window.open(url, "_blank");
+  });
 
-    function updatePaginationButtons() {
-        paginationContainer.innerHTML = "";
-        var prevButton = createPaginationButton("Previous", currentPage - 1);
-        prevButton.disabled = currentPage === 1;
-        var nextButton = createPaginationButton("Next", currentPage + 1);
-        nextButton.disabled = currentPage === totalPages;
-        paginationContainer.appendChild(prevButton);
-        paginationContainer.appendChild(nextButton);
-    }
-
-    var paginationContainer = document.createElement("div");
-    paginationContainer.classList.add("mt-3");
-    document.querySelector(".container").appendChild(paginationContainer);
-
-    searchInput.addEventListener("input", function () {
-        var searchValue = searchInput.value.trim().toLowerCase();
-        Array.from(tableBody.getElementsByTagName("tr")).forEach(function (row) {
-            var shipperName = row.cells[4].textContent.toLowerCase();
-            var shipperContact = row.cells[5].textContent.toLowerCase();
-            var consigneeName = row.cells[6].textContent.toLowerCase();
-            var consigneeContact = row.cells[7].textContent.toLowerCase();
-            if (
-                shipperName.includes(searchValue) ||
-                shipperContact.includes(searchValue) ||
-                consigneeName.includes(searchValue) ||
-                consigneeContact.includes(searchValue)
-            ) {
-                row.style.display = "";
-            } else {
-                row.style.display = "none";
-            }
-        });
-        currentPage = 1;
-        updateTablePagination(entriesPerPage);
-        updatePaginationButtons();
+  document.getElementById("export-btn").addEventListener("click", function () {
+    var visibleRows = Array.from(
+      document.querySelectorAll("#myTable tbody tr")
+    ).filter(function (row) {
+      return row.style.display !== "none";
     });
-
-    updateTablePagination(entriesPerPage);
-    updatePaginationButtons();
-
-    document.getElementById("export-btn").addEventListener("click", function () {
-        var visibleRows = Array.from(
-            document.querySelectorAll("#data-table tbody tr")
-        ).filter(function (row) {
-            return row.style.display !== "none";
-        });
-        var filteredTable = document.createElement("table");
-        filteredTable.innerHTML = document.getElementById("data-table").innerHTML;
-        var existingTBody = filteredTable.querySelector("tbody");
-        if (existingTBody) {
-            filteredTable.removeChild(existingTBody);
-        }
-        var newTBody = document.createElement("tbody");
-        visibleRows.forEach(function (row) {
-            newTBody.appendChild(row.cloneNode(true));
-        });
-        filteredTable.appendChild(newTBody);
-        var wb = XLSX.utils.table_to_book(filteredTable);
-        var wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-        var blob = new Blob([wbout], { type: "application/octet-stream" });
-        saveAs(blob, "table_data.xlsx");
+    var filteredTable = document.createElement("table");
+    filteredTable.innerHTML = document.getElementById("myTable").innerHTML;
+    var existingTBody = filteredTable.querySelector("tbody");
+    if (existingTBody) {
+      filteredTable.removeChild(existingTBody);
+    }
+    var newTBody = document.createElement("tbody");
+    visibleRows.forEach(function (row) {
+      newTBody.appendChild(row.cloneNode(true));
     });
+    filteredTable.appendChild(newTBody);
+    var wb = XLSX.utils.table_to_book(filteredTable);
+    var wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    var blob = new Blob([wbout], { type: "application/octet-stream" });
+    saveAs(blob, "table_data.xlsx");
+  });
+});
+
+    
 </script>
+
+
 </body>
 </html>

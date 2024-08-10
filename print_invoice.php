@@ -109,11 +109,17 @@
                             },
                             {
                               text: `\nName:     ${shipmentData["consignee_name"]}`,
-                              alignment: "left",
+                              alignment: 'left',
+                              margin: [0, 0, 0,5], // Adjust margins if needed
+                              fontSize: 11, // Font size, adjust as necessary
+                              width: '100%', // Adjust width as needed
+                              maxWidth: 200, // Set a maximum width in pixels (adjust this value to fit your layout)
+                              lineHeight: 1.2 // Optional: Adjust line height for spacing between lines
                             },
                             {
                               text: `\nContact:  ${shipmentData["consignee_contact"]}\n\n`,
                               alignment: "left",
+                              fontSize:11,
                             },
                             {
                               text: "Shipper Information",
@@ -124,16 +130,23 @@
                             {
                               text: `\nName:     ${shipmentData["shipper_name"]}`,
                               alignment: "left",
+                              margin: [0, 0, 0, 0], // Adjust margins if needed
+                              fontSize: 11, // Font size, adjust as necessary
+                              width: '100%', // Adjust width as needed
+                              maxWidth: 200, // Set a maximum width in pixels (adjust this value to fit your layout)
+                              lineHeight: 1.2 // Optional: Adjust line height for spacing between lines
                             },
                             {
                               text: `\nContact:  ${shipmentData["shipper_contact"]}\n\n`,
                               alignment: "left",
+                              fontSize:11,
+                              
                             },
-                            {
-                              text: `\nSignature:__________________`,
-                              alignment: "left",
-                              bold:true,
-                            },
+                            // {
+                            //   text: `\nSignature:__________________`,
+                            //   alignment: "left",
+                            //   bold:true,
+                            // },
                           ],
                           alignment: "left",
                         },
@@ -142,7 +155,7 @@
                             {
                               text: `\n${shipmentData["receipt_no"].toUpperCase()}`,
                               alignment: "center",
-                              margin: [0, 5, 0, 30],
+                              margin: [0, 5, 0, 20],
                               bold: true,
                               fontSize: "11",
                             },
@@ -153,12 +166,14 @@
                             },
                             {
                               text: `\nDestination:`,
+                              margin: [0, 0, 0, 5],
+                              decoration:"underline",
                               alignment: "center",
                               bold: true,
-                              fontSize: "13",
+                              fontSize: "11",
                             },
                             {
-                              text: `${shipmentData["destination"]}`,
+                              text: `${shipmentData["destination"].toUpperCase()}`,
                               alignment: "center",
                               fontSize: "16",
                             },
@@ -340,11 +355,17 @@
                             },
                             {
                               text: `\nName:     ${shipmentData["consignee_name"]}`,
-                              alignment: "left",
+                              alignment: 'left',
+                              margin: [0, 0, 0, 0], // Adjust margins if needed
+                              fontSize: 11, // Font size, adjust as necessary
+                              width: '100%', // Adjust width as needed
+                              maxWidth: 200, // Set a maximum width in pixels (adjust this value to fit your layout)
+                              lineHeight: 1.2 // Optional: Adjust line height for spacing between lines
                             },
                             {
                               text: `\nContact:  ${shipmentData["consignee_contact"]}\n\n`,
                               alignment: "left",
+                              fontSize:11,
                             },
                             {
                               text: "Shipper Information",
@@ -355,16 +376,23 @@
                             {
                               text: `\nName:     ${shipmentData["shipper_name"]}`,
                               alignment: "left",
+                              margin: [0, 0, 0, 0], // Adjust margins if needed
+                              fontSize: 11, // Font size, adjust as necessary
+                              width: '100%', // Adjust width as needed
+                              maxWidth: 200, // Set a maximum width in pixels (adjust this value to fit your layout)
+                              lineHeight: 1.2 // Optional: Adjust line height for spacing between lines
                             },
                             {
                               text: `\nContact:  ${shipmentData["shipper_contact"]}\n\n`,
                               alignment: "left",
+                              fontSize:11,
+                              
                             },
-                            {
-                              text: `\nSignature:__________________`,
-                              alignment: "left",
-                              bold:true,
-                            },
+                            // {
+                            //   text: `\nSignature:__________________`,
+                            //   alignment: "left",
+                            //   bold:true,
+                            // },
                           ],
                           alignment: "left",
                         },
@@ -373,7 +401,7 @@
                             {
                               text: `\n${shipmentData["receipt_no"].toUpperCase()}`,
                               alignment: "center",
-                              margin: [0, 5, 0, 30],
+                              margin: [0, 5, 0, 20],
                               bold: true,
                               fontSize: "11",
                             },
@@ -384,9 +412,11 @@
                             },
                             {
                               text: `\nDestination:`,
+                              margin: [0, 0, 0, 5],
+                              decoration:"underline",
                               alignment: "center",
                               bold: true,
-                              fontSize: "13",
+                              fontSize: "11",
                             },
                             {
                               text: `${shipmentData["destination"]}`,

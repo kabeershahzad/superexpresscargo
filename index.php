@@ -12,6 +12,49 @@ $userid = $_SESSION['userid'];
 $name = $_SESSION['name'];
 $city = $_SESSION['city'];
 $office = $_SESSION['office'];
+// Query to get the total pending deliveries
+$query = "SELECT COUNT(s.shipment_id) as total_pending 
+          FROM shipments s
+          JOIN users u ON s.destination = u.city
+          WHERE u.userid = ? AND s.status = 'dispatched'";
+          
+$stmt = $con->prepare($query);
+$stmt->bind_param("i", $userid);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$total_pending = $row['total_pending'];
+
+
+$sql = $con->prepare("SELECT SUM(s.total_amount) AS totalcod 
+                      FROM shipments s
+                      JOIN users u ON s.origin = u.city
+                      WHERE u.userid = ? 
+                      AND s.mode_of_payment = 'COD'
+                      AND MONTH(s.date) = MONTH(CURDATE()) 
+                      AND YEAR(s.date) = YEAR(CURDATE())");
+
+if ($sql === false) {
+    die('Prepare failed: ' . htmlspecialchars($con->error));
+}
+
+$userId = intval($userid); // Ensure $userId is an integer
+$sql->bind_param("i", $userid);
+
+if (!$sql->execute()) {
+    die('Execute failed: ' . htmlspecialchars($sql->error));
+}
+
+$result = $sql->get_result();
+
+if ($result === false) {
+    die('Get result failed: ' . htmlspecialchars($sql->error));
+}
+
+$row = $result->fetch_assoc();
+$totalCod = $row['totalcod'] !== null ? $row['totalcod'] : 0;
+
+
 
 ?>
 
@@ -29,7 +72,52 @@ $office = $_SESSION['office'];
     />
     <link rel="icon" type="image/x-icon" href="./images/super-express-cargo.ico">
 
-    
+    <style>
+      .dashboard-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: 200px; /* Adjust as needed */
+      }
+      .dashboard-card h2 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: black;
+      }
+      .dashboard-card p {
+        font-size: 1.5rem;
+        color:maroon;
+        font-weight: 700;
+      }
+      .dashboard-card p.cod{
+        color: seagreen;
+      }
+      @media (max-width: 767px) {
+            .container {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 1.5rem; /* Decrease the size of h1 */
+                margin-top: 20px;
+            }
+            h2 {
+                font-size: 1.2rem; /* Decrease the size of h2 */
+            }
+            .dashboard-card {
+                padding: 10px;
+            }
+            .button-container {
+                flex-direction: column;
+            }
+           
+        }
+    </style>
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
@@ -66,20 +154,40 @@ $office = $_SESSION['office'];
     </nav>
 
     <div class="container" style="color:white;">
-      <h1 class="center" style="color:white;">Welcome to the Super Express</h1>
+      <h1 class="center" style="color:white;">Welcome to Super Express</h1>
       <h2 class="center">
-        Hello,
-        <?php echo htmlspecialchars($name); ?>!
+        Hello 
+        <?php echo htmlspecialchars($name); ?>
       </h2>
       
       <h2 class="center">
-        City:
+        Station:
         <?php echo htmlspecialchars($city); ?>
       </h2>
-      <h2 class="center">
-        Office:
-        <?php echo htmlspecialchars($office); ?>
-      </h2>
+      
+      
+      <!-- Dashboard Card for Pending Deliveries -->
+  <div class="row justify-content-center">
+    <!-- Card for Total Pending Deliveries -->
+    <div class="col-lg-4 col-md-6 mb-4">
+      <a href="./report.php" class="text-decoration-none">
+        <div class="dashboard-card text-center">
+          <h2>Total Pending Deliveries</h2>
+          <p><?php echo $total_pending; ?></p>
+        </div>
+      </a>
+    </div>
+
+    <!-- Card for Total COD From Karachi -->
+    <div class="col-lg-4 col-md-6 mb-4">
+      <a href="" class="text-decoration-none">
+        <div class="dashboard-card text-center">
+          <h2>Total COD from <?php echo $city?></h2>
+          <p class="cod"><?php echo $totalCod; ?></p>
+        </div>
+      </a>
+    </div>
+  </div>
       <div class="button-container">
         <a href="./createreceipt.php"
           ><button class="btn btn-success">Dispatch</button></a

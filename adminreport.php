@@ -22,8 +22,9 @@ if (isset($_POST['delete'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Report</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous" />
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+
     <link rel="icon" type="image/x-icon" href="./images/super-express-cargo.ico">
 
     <style>
@@ -31,9 +32,23 @@ if (isset($_POST['delete'])) {
             padding-top: 60px;
         }
         tr {
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-            font-size: 15px;
             cursor: pointer;
+            font-size: 16px;
+            font-weight: 500px;
+        }
+        /* Adjust the table row size */
+        #myTable tbody tr {
+            height: 70px; /* Adjust this value as needed */
+        }
+
+        /* Optional: Center align text vertically within table cells */
+        #myTable tbody td {
+            vertical-align: middle;
+        }
+
+        /* Adjust the column sizes */
+         #myTable td {
+            white-space: nowrap; /* Prevents text from wrapping */
         }
     </style>
 </head>
@@ -41,29 +56,23 @@ if (isset($_POST['delete'])) {
     <?php include('./adminnav.php'); ?>
 
     <div class="container">
-        <div class="input-group mt-3">
-            <input type="text" class="form-control" id="search-input" placeholder="Search" />
-        </div>
-        <div class="dropdown mt-5">
-            <label for="entries-per-page">Entries per page:</label>
-            <select id="entries-per-page">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-        </div>
+    <h2 class="text-center">DELIVERY</h2>
+
         <div>
             <button class="btn btn-success mt-5" id="export-btn">Export In Excel</button>
         </div>
-        <table class="table table-striped" id="data-table">
+        <div class="table-responsive mt-3">
+
+        <table class="table table-striped" id="myTable">
             <thead>
                 <tr>
-                    <th>Shipment Id</th>
+                    <th>Id</th>
                     <th>Date</th>
                     <th>Origin</th>
                     <th>Destination</th>
                     <th>Receipt#</th>
+                    <th>Status</th>
+
                     <th>Shipper</th>
                     <th>Shipper Contact</th>
                     <th>Consignee</th>
@@ -85,35 +94,40 @@ if (isset($_POST['delete'])) {
                 mysqli_stmt_execute($stmt);
                 $result = mysqli_stmt_get_result($stmt);
 
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>";
-                    echo "<td>" . $row['shipment_id'] . "</td>";
-                    echo "<td>" . date("d-m-Y", strtotime($row['date'])) . "</td>";
-                    echo "<td>" . $row['origin'] . "</td>";
-                    echo "<td>" . $row['destination'] . "</td>";
-                    echo "<td>" . $row['receipt_no'] . "</td>";
-                    echo "<td>" . $row['shipper_name'] . "</td>";
-                    echo "<td>" . $row['shipper_contact'] . "</td>";
-                    echo "<td>" . $row['consignee_name'] . "</td>";
-                    echo "<td>" . $row['consignee_contact'] . "</td>";
-                    echo "<td>" . $row['weight'] . "</td>";
-                    echo "<td>" . $row['pieces'] . "</td>";
-                    echo "<td>" . $row['rate'] . "</td>";
-                    echo "<td>" . $row['local_charges'] . "</td>";
-                    echo "<td>" . $row['packing'] . "</td>";
-                    echo "<td>" . $row['total_amount'] . "</td>";
-                    echo "<td>" . $row['office'] . "</td>";
-                    echo "<td>" . 
-        "<form method='post' action='adminreport.php' style='display:inline;' onsubmit=\"event.stopPropagation();\">" .
-            "<input type='hidden' name='shipment' value='" . $row['shipment_id'] . "'>" .
-            "<button type='submit' name='delete' class='btn btn-danger' onclick=\"event.stopPropagation();\">Delete</button>" .
-        "</form>" . 
-    "</td>";
-                    echo "</tr>";
-                }
-                ?>
+                 while ($row = mysqli_fetch_assoc($result)): ?>
+                    <?php $statusClass = $row['status'] == 'DISPATCHED' ? 'bg-warning text-black' : 'bg-success text-white'; ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['shipment_id']); ?></td>
+                        <td><?php echo date("d-m-Y", strtotime($row['date'])); ?></td>
+                        <td><?php echo htmlspecialchars($row['origin']); ?></td>
+                        <td><?php echo htmlspecialchars($row['destination']); ?></td>
+                        <td><?php echo htmlspecialchars($row['receipt_no']); ?></td>
+                        <td class="<?php echo $statusClass; ?> text-center">
+                            <span style="font-weight:bold"><?php echo htmlspecialchars($row['status']); ?></span>
+                        </td>
+                        <td><?php echo htmlspecialchars($row['shipper_name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['shipper_contact']); ?></td>
+                        <td><?php echo htmlspecialchars($row['consignee_name']); ?></td>
+                        <td><?php echo htmlspecialchars($row['consignee_contact']); ?></td>
+                        <td><?php echo htmlspecialchars($row['weight']); ?></td>
+                        <td><?php echo htmlspecialchars($row['pieces']); ?></td>
+                        <td><?php echo htmlspecialchars($row['rate']); ?></td>
+                        <td><?php echo htmlspecialchars($row['local_charges']); ?></td>
+                        <td><?php echo htmlspecialchars($row['packing']); ?></td>
+                        <td><?php echo htmlspecialchars($row['total_amount']); ?></td>
+                        <td><?php echo htmlspecialchars($row['office']); ?></td>
+                        <td>
+                            <form method="post" action="adminreport.php" style="display:inline;" onsubmit="event.stopPropagation();">
+                                <input type="hidden" name="shipment" value="<?php echo htmlspecialchars($row['shipment_id']); ?>">
+                                <button type="submit" name="delete" class="btn btn-danger" onclick="event.stopPropagation();">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+                
             </tbody>
         </table>
+        </div>
     </div>
     <div class="container mt-3">
         <div class="text-center" id="loading-icon" style="display: none;">
@@ -122,7 +136,52 @@ if (isset($_POST['delete'])) {
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="export.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        
+  });
+  $("#myTable").DataTable({
+    order: [[0, "desc"]], // Sorting by the first column (ID) in descending order
+  });
+
+  // Add click event listener to visible rows
+  $("#myTable tbody").on("click", "tr", function () {
+    var shipmentId = $(this).find("td").eq(4).text();
+    var url = "print_invoice.php?id=" + shipmentId;
+    window.open(url, "_blank");
+  });
+
+  document.getElementById("export-btn").addEventListener("click", function () {
+    var visibleRows = Array.from(
+      document.querySelectorAll("#myTable tbody tr")
+    ).filter(function (row) {
+      return row.style.display !== "none";
+    });
+    var filteredTable = document.createElement("table");
+    filteredTable.innerHTML = document.getElementById("myTable").innerHTML;
+    var existingTBody = filteredTable.querySelector("tbody");
+    if (existingTBody) {
+      filteredTable.removeChild(existingTBody);
+    }
+    var newTBody = document.createElement("tbody");
+    visibleRows.forEach(function (row) {
+      newTBody.appendChild(row.cloneNode(true));
+    });
+    filteredTable.appendChild(newTBody);
+    var wb = XLSX.utils.table_to_book(filteredTable);
+    var wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    var blob = new Blob([wbout], { type: "application/octet-stream" });
+    saveAs(blob, "table_data.xlsx");
+  });
+
+
+    </script>
 </body>
 </html>
